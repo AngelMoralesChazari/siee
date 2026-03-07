@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/evaluacion_estructural.dart';
 import '../services/firebase_service.dart';
 
@@ -28,7 +29,7 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
 
   void _crearControllers() {
     final keys = [
-      'coordenadas', 'nombreInmueble', 'calleYNumero', 'colonia', 'codigoPostal',
+      'coordenadasN', 'coordenadasO', 'nombreInmueble', 'calleYNumero', 'colonia', 'codigoPostal',
       'puebloCiudad', 'municipioAlcaldia', 'estado', 'referencias', 'contacto', 'telefono',
       'usoOtro',
       'numeroNiveles', 'numeroSotanos', 'pisosEstacionamiento', 'numeroOcupantes',
@@ -50,7 +51,8 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
   void _sincronizarDatosBasicos() {
     _datos = EvaluacionBloque1(
       fecha: _datos.fecha,
-      coordenadas: _controllers['coordenadas']!.text,
+      coordenadasN: _controllers['coordenadasN']!.text,
+      coordenadasO: _controllers['coordenadasO']!.text,
       nombreInmueble: _controllers['nombreInmueble']!.text,
       calleYNumero: _controllers['calleYNumero']!.text,
       colonia: _controllers['colonia']!.text,
@@ -274,8 +276,29 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
               ),
               const SizedBox(width: 12),
               Expanded(
-                flex: 2,
-                child: _campo('Coordenadas (N. ___ O.___, msnm)', _controllers['coordenadas']!),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Coordenadas',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _campoNumerico('N', _controllers['coordenadasN']!),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: _campoNumerico('O', _controllers['coordenadasO']!),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -337,6 +360,22 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
       ),
       maxLines: lineas,
       keyboardType: teclado,
+      onChanged: (_) => setState(() {}),
+    );
+  }
+
+  Widget _campoNumerico(String label, TextEditingController c) {
+    return TextFormField(
+      controller: c,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+        isDense: true,
+      ),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'[\d.]')),
+      ],
       onChanged: (_) => setState(() {}),
     );
   }

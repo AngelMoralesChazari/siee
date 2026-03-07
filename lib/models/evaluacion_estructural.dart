@@ -5,7 +5,10 @@ class EvaluacionBloque1 {
 
   // --- Datos básicos ---
   DateTime? fecha;
-  String coordenadas;
+  /// Latitud (N) - solo numérico.
+  String coordenadasN;
+  /// Longitud (O) - solo numérico.
+  String coordenadasO;
   String nombreInmueble;
   String calleYNumero;
   String colonia;
@@ -57,7 +60,8 @@ class EvaluacionBloque1 {
     this.id,
     this.fecha,
     this.fechaRegistro,
-    this.coordenadas = '',
+    this.coordenadasN = '',
+    this.coordenadasO = '',
     this.nombreInmueble = '',
     this.calleYNumero = '',
     this.colonia = '',
@@ -99,7 +103,8 @@ class EvaluacionBloque1 {
 
   bool get tieneAlgunDatoBasico =>
       fecha != null ||
-      coordenadas.trim().isNotEmpty ||
+      coordenadasN.trim().isNotEmpty ||
+      coordenadasO.trim().isNotEmpty ||
       nombreInmueble.trim().isNotEmpty ||
       calleYNumero.trim().isNotEmpty ||
       colonia.trim().isNotEmpty ||
@@ -148,7 +153,8 @@ class EvaluacionBloque1 {
   Map<String, dynamic> toMap() {
     return {
       'fecha': fecha?.toIso8601String(),
-      'coordenadas': coordenadas,
+      'coordenadasN': coordenadasN,
+      'coordenadasO': coordenadasO,
       'nombreInmueble': nombreInmueble,
       'calleYNumero': calleYNumero,
       'colonia': colonia,
@@ -200,7 +206,8 @@ class EvaluacionBloque1 {
       id: id,
       fechaRegistro: fechaReg,
       fecha: m['fecha'] != null ? DateTime.tryParse(m['fecha'].toString()) : null,
-      coordenadas: m['coordenadas']?.toString() ?? '',
+      coordenadasN: m['coordenadasN']?.toString() ?? '',
+      coordenadasO: m['coordenadasO']?.toString() ?? '',
       nombreInmueble: m['nombreInmueble']?.toString() ?? '',
       calleYNumero: m['calleYNumero']?.toString() ?? '',
       colonia: m['colonia']?.toString() ?? '',
@@ -258,7 +265,8 @@ class EvaluacionBloque1 {
     String? id,
     DateTime? fecha,
     DateTime? fechaRegistro,
-    String? coordenadas,
+    String? coordenadasN,
+    String? coordenadasO,
     String? nombreInmueble,
     String? calleYNumero,
     String? colonia,
@@ -301,7 +309,8 @@ class EvaluacionBloque1 {
       id: id ?? this.id,
       fecha: fecha ?? this.fecha,
       fechaRegistro: fechaRegistro ?? this.fechaRegistro,
-      coordenadas: coordenadas ?? this.coordenadas,
+      coordenadasN: coordenadasN ?? this.coordenadasN,
+      coordenadasO: coordenadasO ?? this.coordenadasO,
       nombreInmueble: nombreInmueble ?? this.nombreInmueble,
       calleYNumero: calleYNumero ?? this.calleYNumero,
       colonia: colonia ?? this.colonia,
