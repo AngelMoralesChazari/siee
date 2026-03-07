@@ -43,40 +43,48 @@ class SieeApp extends StatelessWidget {
           error: const Color(0xFFBA1A1A),
           onError: Colors.white,
         ),
+
         appBarTheme: const AppBarTheme(
           backgroundColor: _primaryBase,
           foregroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
         ),
+
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: _primaryBase,
           foregroundColor: Colors.white,
           elevation: 2,
         ),
+
         filledButtonTheme: FilledButtonThemeData(
           style: FilledButton.styleFrom(
             backgroundColor: _primaryBase,
             foregroundColor: Colors.white,
           ),
         ),
+
         inputDecorationTheme: InputDecorationTheme(
           border: const OutlineInputBorder(),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: _primaryBase, width: 1.5),
           ),
+
           labelStyle: const TextStyle(color: Color(0xFF4E5D6E)),
         ),
+
         cardTheme: CardThemeData(
           elevation: 1,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           color: Colors.white,
         ),
+
         chipTheme: ChipThemeData(
           selectedColor: _primaryBase.withValues(alpha: 0.2),
           checkmarkColor: _primaryBase,
         ),
       ),
+      
       home: const HomeScreen(),
     );
   }
