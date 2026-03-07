@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'formulario_screen.dart';
+import 'formulario_evaluacion_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -32,7 +32,7 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => const FormularioScreen(),
+            builder: (context) => const FormularioEvaluacionScreen(),
           ),
         ),
         child: const Icon(Icons.add),
