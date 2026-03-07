@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "386004772357",
+    "firebase_url": "https://siee-abf20-default-rtdb.firebaseio.com",
+    "project_id": "siee-abf20",
+    "storage_bucket": "siee-abf20.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:386004772357:android:6d852991e1ee34abc65e6c",
+        "android_client_info": {
+          "package_name": "com.absoftwaregroup.com"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAXcThW2Oplisk8o82YNNLC2F4RighyGAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
