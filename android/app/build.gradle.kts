@@ -2,8 +2,7 @@ plugins {
     id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
-    // Desactivado temporalmente para evitar cierre al abrir. Reactivar cuando uses la base de datos.
-    // id("com.google.gms.google-services")
+    id("com.google.gms.google-services")
 }
 
 android {

@@ -47,7 +47,6 @@ class _FormularioScreenState extends State<FormularioScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Nuevo formulario'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: Form(
         key: _formKey,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/evaluacion_estructural.dart';
+import '../services/firebase_service.dart';
 
 /// Bloque 1: INFORMACIÓN GENERAL (datos básicos + Sección 1, 2, 3).
 class FormularioEvaluacionScreen extends StatefulWidget {
@@ -13,6 +14,7 @@ class FormularioEvaluacionScreen extends StatefulWidget {
 class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen> {
   static const int _totalPasos = 4; // 0: datos básicos, 1: sección 1, 2: sección 2, 3: sección 3
   int _pasoActual = 0;
+  bool _guardando = false;
 
   late EvaluacionBloque1 _datos;
   final _controllers = <String, TextEditingController>{};
@@ -134,15 +136,30 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
     }
   }
 
-  void _avanzar() {
+  Future<void> _avanzar() async {
     if (!_puedeSiguiente()) return;
     if (_pasoActual < _totalPasos - 1) {
       setState(() => _pasoActual++);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Bloque 1 completado. (Bloque 2 en desarrollo)')),
-      );
-      Navigator.of(context).pop();
+      _sincronizarDatosBasicos();
+      _sincronizarSeccion1();
+      _sincronizarSeccion2();
+      setState(() => _guardando = true);
+      try {
+        await FirebaseService().guardarEvaluacion(_datos);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Guardado en Firebase correctamente')),
+        );
+        Navigator.of(context).pop();
+      } catch (e) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error al guardar: $e')),
+        );
+      } finally {
+        if (mounted) setState(() => _guardando = false);
+      }
     }
   }
 
@@ -155,7 +172,6 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Evaluación estructural'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.of(context).pop(),
@@ -202,8 +218,14 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
                     ),
                   const Spacer(),
                   FilledButton.icon(
-                    onPressed: _puedeSiguiente() ? _avanzar : null,
-                    icon: const Icon(Icons.arrow_forward, size: 18),
+                    onPressed: (!_guardando && _puedeSiguiente()) ? _avanzar : null,
+                    icon: _guardando
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.arrow_forward, size: 18),
                     label: Text(_pasoActual == _totalPasos - 1 ? 'Finalizar' : 'Siguiente'),
                   ),
                 ],
@@ -270,7 +292,7 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
               const SizedBox(width: 12),
               Expanded(child: _campo('Colonia', _controllers['colonia']!)),
               const SizedBox(width: 12),
-              Expanded(child: _campo('Código Postal', _controllers['codigoPostal']!, teclado: TextInputType.number)),
+              Expanded(child: _campo('C.P.', _controllers['codigoPostal']!, teclado: TextInputType.number)),
             ],
           ),
           const SizedBox(height: 12),

@@ -1,5 +1,8 @@
 /// Modelo del Bloque 1: INFORMACIÓN GENERAL (evaluación estructural).
 class EvaluacionBloque1 {
+  /// Id en Firebase (cuando se carga desde la BD).
+  String? id;
+
   // --- Datos básicos ---
   DateTime? fecha;
   String coordenadas;
@@ -39,6 +42,9 @@ class EvaluacionBloque1 {
   double? dimensionFrenteX;
   double? dimensionFondoY;
 
+  /// Fecha de registro (al guardar en Firebase).
+  DateTime? fechaRegistro;
+
   // --- Sección 3: Topografía ---
   bool topografiaPlanicie;
   bool topografiaLadera;
@@ -48,7 +54,9 @@ class EvaluacionBloque1 {
   bool topografiaCosta;
 
   EvaluacionBloque1({
+    this.id,
     this.fecha,
+    this.fechaRegistro,
     this.coordenadas = '',
     this.nombreInmueble = '',
     this.calleYNumero = '',
@@ -136,8 +144,120 @@ class EvaluacionBloque1 {
       topografiaDepositosLacustres ||
       topografiaCosta;
 
+  /// Para guardar en Firebase Realtime Database.
+  Map<String, dynamic> toMap() {
+    return {
+      'fecha': fecha?.toIso8601String(),
+      'coordenadas': coordenadas,
+      'nombreInmueble': nombreInmueble,
+      'calleYNumero': calleYNumero,
+      'colonia': colonia,
+      'codigoPostal': codigoPostal,
+      'puebloCiudad': puebloCiudad,
+      'municipioAlcaldia': municipioAlcaldia,
+      'estado': estado,
+      'referencias': referencias,
+      'contacto': contacto,
+      'telefono': telefono,
+      'usoVivienda': usoVivienda,
+      'usoHospital': usoHospital,
+      'usoOficinas': usoOficinas,
+      'usoIglesia': usoIglesia,
+      'usoComercio': usoComercio,
+      'usoReunion': usoReunion,
+      'usoEscuela': usoEscuela,
+      'usoIndustrial': usoIndustrial,
+      'usoOtro': usoOtro,
+      'desocupada': desocupada,
+      'numeroNiveles': numeroNiveles,
+      'numeroSotanos': numeroSotanos,
+      'pisosEstacionamiento': pisosEstacionamiento,
+      'numeroOcupantes': numeroOcupantes,
+      'elevador': elevador,
+      'escaleraEmergencia': escaleraEmergencia,
+      'anioConstruccion': anioConstruccion,
+      'anioDanoSevero': anioDanoSevero,
+      'anioRehabilitacion': anioRehabilitacion,
+      'dimensionFrenteX': dimensionFrenteX,
+      'dimensionFondoY': dimensionFondoY,
+      'topografiaPlanicie': topografiaPlanicie,
+      'topografiaLadera': topografiaLadera,
+      'topografiaRivera': topografiaRivera,
+      'topografiaFondoValle': topografiaFondoValle,
+      'topografiaDepositosLacustres': topografiaDepositosLacustres,
+      'topografiaCosta': topografiaCosta,
+      'fechaRegistro': DateTime.now().toIso8601String(),
+    };
+  }
+
+  /// Desde Firebase Realtime Database.
+  static EvaluacionBloque1 fromMap(String id, Map<dynamic, dynamic> map) {
+    final m = Map<String, dynamic>.from(map);
+    final fechaReg = m['fechaRegistro'] != null
+        ? DateTime.tryParse(m['fechaRegistro'].toString())
+        : null;
+    return EvaluacionBloque1(
+      id: id,
+      fechaRegistro: fechaReg,
+      fecha: m['fecha'] != null ? DateTime.tryParse(m['fecha'].toString()) : null,
+      coordenadas: m['coordenadas']?.toString() ?? '',
+      nombreInmueble: m['nombreInmueble']?.toString() ?? '',
+      calleYNumero: m['calleYNumero']?.toString() ?? '',
+      colonia: m['colonia']?.toString() ?? '',
+      codigoPostal: m['codigoPostal']?.toString() ?? '',
+      puebloCiudad: m['puebloCiudad']?.toString() ?? '',
+      municipioAlcaldia: m['municipioAlcaldia']?.toString() ?? '',
+      estado: m['estado']?.toString() ?? '',
+      referencias: m['referencias']?.toString() ?? '',
+      contacto: m['contacto']?.toString() ?? '',
+      telefono: m['telefono']?.toString() ?? '',
+      usoVivienda: m['usoVivienda'] == true,
+      usoHospital: m['usoHospital'] == true,
+      usoOficinas: m['usoOficinas'] == true,
+      usoIglesia: m['usoIglesia'] == true,
+      usoComercio: m['usoComercio'] == true,
+      usoReunion: m['usoReunion'] == true,
+      usoEscuela: m['usoEscuela'] == true,
+      usoIndustrial: m['usoIndustrial'] == true,
+      usoOtro: m['usoOtro']?.toString() ?? '',
+      desocupada: m['desocupada'] == true,
+      numeroNiveles: _int(m['numeroNiveles']),
+      numeroSotanos: _int(m['numeroSotanos']),
+      pisosEstacionamiento: _int(m['pisosEstacionamiento']),
+      numeroOcupantes: _int(m['numeroOcupantes']),
+      elevador: m['elevador'] == true,
+      escaleraEmergencia: m['escaleraEmergencia'] == true,
+      anioConstruccion: _int(m['anioConstruccion']),
+      anioDanoSevero: _int(m['anioDanoSevero']),
+      anioRehabilitacion: _int(m['anioRehabilitacion']),
+      dimensionFrenteX: _double(m['dimensionFrenteX']),
+      dimensionFondoY: _double(m['dimensionFondoY']),
+      topografiaPlanicie: m['topografiaPlanicie'] == true,
+      topografiaLadera: m['topografiaLadera'] == true,
+      topografiaRivera: m['topografiaRivera'] == true,
+      topografiaFondoValle: m['topografiaFondoValle'] == true,
+      topografiaDepositosLacustres: m['topografiaDepositosLacustres'] == true,
+      topografiaCosta: m['topografiaCosta'] == true,
+    );
+  }
+
+  static int? _int(dynamic v) {
+    if (v == null) return null;
+    if (v is int) return v;
+    return int.tryParse(v.toString());
+  }
+
+  static double? _double(dynamic v) {
+    if (v == null) return null;
+    if (v is double) return v;
+    if (v is int) return v.toDouble();
+    return double.tryParse(v.toString().replaceAll(',', '.'));
+  }
+
   EvaluacionBloque1 copyWith({
+    String? id,
     DateTime? fecha,
+    DateTime? fechaRegistro,
     String? coordenadas,
     String? nombreInmueble,
     String? calleYNumero,
@@ -178,7 +298,9 @@ class EvaluacionBloque1 {
     bool? topografiaCosta,
   }) {
     return EvaluacionBloque1(
+      id: id ?? this.id,
       fecha: fecha ?? this.fecha,
+      fechaRegistro: fechaRegistro ?? this.fechaRegistro,
       coordenadas: coordenadas ?? this.coordenadas,
       nombreInmueble: nombreInmueble ?? this.nombreInmueble,
       calleYNumero: calleYNumero ?? this.calleYNumero,
