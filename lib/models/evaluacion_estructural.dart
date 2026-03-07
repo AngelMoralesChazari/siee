@@ -10,7 +10,10 @@ class EvaluacionBloque1 {
   /// Longitud (O) - solo numérico.
   String coordenadasO;
   String nombreInmueble;
-  String calleYNumero;
+  /// Nombre de la calle.
+  String nombreCalle;
+  /// Número de la calle o "S/N" (sin número).
+  String numeroCalle;
   String colonia;
   String codigoPostal;
   String puebloCiudad;
@@ -63,7 +66,8 @@ class EvaluacionBloque1 {
     this.coordenadasN = '',
     this.coordenadasO = '',
     this.nombreInmueble = '',
-    this.calleYNumero = '',
+    this.nombreCalle = '',
+    this.numeroCalle = '',
     this.colonia = '',
     this.codigoPostal = '',
     this.puebloCiudad = '',
@@ -106,7 +110,8 @@ class EvaluacionBloque1 {
       coordenadasN.trim().isNotEmpty ||
       coordenadasO.trim().isNotEmpty ||
       nombreInmueble.trim().isNotEmpty ||
-      calleYNumero.trim().isNotEmpty ||
+      nombreCalle.trim().isNotEmpty ||
+      numeroCalle.trim().isNotEmpty ||
       colonia.trim().isNotEmpty ||
       codigoPostal.trim().isNotEmpty ||
       puebloCiudad.trim().isNotEmpty ||
@@ -156,7 +161,8 @@ class EvaluacionBloque1 {
       'coordenadasN': coordenadasN,
       'coordenadasO': coordenadasO,
       'nombreInmueble': nombreInmueble,
-      'calleYNumero': calleYNumero,
+      'nombreCalle': nombreCalle,
+      'numeroCalle': numeroCalle,
       'colonia': colonia,
       'codigoPostal': codigoPostal,
       'puebloCiudad': puebloCiudad,
@@ -209,7 +215,8 @@ class EvaluacionBloque1 {
       coordenadasN: m['coordenadasN']?.toString() ?? '',
       coordenadasO: m['coordenadasO']?.toString() ?? '',
       nombreInmueble: m['nombreInmueble']?.toString() ?? '',
-      calleYNumero: m['calleYNumero']?.toString() ?? '',
+      nombreCalle: m['nombreCalle']?.toString() ?? m['calleYNumero']?.toString() ?? '',
+      numeroCalle: m['numeroCalle']?.toString() ?? '',
       colonia: m['colonia']?.toString() ?? '',
       codigoPostal: m['codigoPostal']?.toString() ?? '',
       puebloCiudad: m['puebloCiudad']?.toString() ?? '',
@@ -268,7 +275,8 @@ class EvaluacionBloque1 {
     String? coordenadasN,
     String? coordenadasO,
     String? nombreInmueble,
-    String? calleYNumero,
+    String? nombreCalle,
+    String? numeroCalle,
     String? colonia,
     String? codigoPostal,
     String? puebloCiudad,
@@ -312,7 +320,8 @@ class EvaluacionBloque1 {
       coordenadasN: coordenadasN ?? this.coordenadasN,
       coordenadasO: coordenadasO ?? this.coordenadasO,
       nombreInmueble: nombreInmueble ?? this.nombreInmueble,
-      calleYNumero: calleYNumero ?? this.calleYNumero,
+      nombreCalle: nombreCalle ?? this.nombreCalle,
+      numeroCalle: numeroCalle ?? this.numeroCalle,
       colonia: colonia ?? this.colonia,
       codigoPostal: codigoPostal ?? this.codigoPostal,
       puebloCiudad: puebloCiudad ?? this.puebloCiudad,

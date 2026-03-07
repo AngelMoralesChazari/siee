@@ -16,6 +16,8 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
   static const int _totalPasos = 4; // 0: datos básicos, 1: sección 1, 2: sección 2, 3: sección 3
   int _pasoActual = 0;
   bool _guardando = false;
+  /// true = calle sin número (S/N).
+  bool _calleSinNumero = false;
 
   late EvaluacionBloque1 _datos;
   final _controllers = <String, TextEditingController>{};
@@ -29,7 +31,7 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
 
   void _crearControllers() {
     final keys = [
-      'coordenadasN', 'coordenadasO', 'nombreInmueble', 'calleYNumero', 'colonia', 'codigoPostal',
+      'coordenadasN', 'coordenadasO', 'nombreInmueble', 'nombreCalle', 'numeroCalle', 'colonia', 'codigoPostal',
       'puebloCiudad', 'municipioAlcaldia', 'estado', 'referencias', 'contacto', 'telefono',
       'usoOtro',
       'numeroNiveles', 'numeroSotanos', 'pisosEstacionamiento', 'numeroOcupantes',
@@ -54,7 +56,8 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
       coordenadasN: _controllers['coordenadasN']!.text,
       coordenadasO: _controllers['coordenadasO']!.text,
       nombreInmueble: _controllers['nombreInmueble']!.text,
-      calleYNumero: _controllers['calleYNumero']!.text,
+      nombreCalle: _controllers['nombreCalle']!.text,
+      numeroCalle: _calleSinNumero ? 'S/N' : _controllers['numeroCalle']!.text.trim(),
       colonia: _controllers['colonia']!.text,
       codigoPostal: _controllers['codigoPostal']!.text,
       puebloCiudad: _controllers['puebloCiudad']!.text,
@@ -302,33 +305,72 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
               ),
             ],
           ),
-          const SizedBox(height: 12),
-          _campo('Nombre del Inmueble', _controllers['nombreInmueble']!),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+          _labelSuperior('Nombre del inmueble'),
+          const SizedBox(height: 6),
+          _campo('', _controllers['nombreInmueble']!, hint: 'Escriba el nombre del inmueble'),
+          const SizedBox(height: 16),
+          _labelSuperior('Calle'),
+          const SizedBox(height: 6),
+          _campo('Nombre de la calle', _controllers['nombreCalle']!),
+          const SizedBox(height: 10),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 2,
-                child: _campo('Calle y número', _controllers['calleYNumero']!),
+              SizedBox(
+                width: 24,
+                height: 24,
+                child: Checkbox(
+                  value: _calleSinNumero,
+                  onChanged: (v) {
+                    setState(() {
+                      _calleSinNumero = v ?? false;
+                      if (_calleSinNumero) _controllers['numeroCalle']!.clear();
+                    });
+                  },
+                ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 8),
+              Text('S/N (sin n\u00famero)', style: Theme.of(context).textTheme.bodyMedium),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TextFormField(
+                  controller: _controllers['numeroCalle']!,
+                  decoration: const InputDecoration(
+                    labelText: 'N\u00famero',
+                    border: OutlineInputBorder(),
+                    isDense: true,
+                  ),
+                  keyboardType: TextInputType.number,
+                  enabled: !_calleSinNumero,
+                  onChanged: (_) => setState(() {}),
+                ),
+              ),
+            ],
+          ),
+          if (!_calleSinNumero) const SizedBox(height: 4),
+          const SizedBox(height: 16),
+          _labelSuperior('Colonia y c\u00f3digo postal'),
+          const SizedBox(height: 6),
+          Row(
+            children: [
               Expanded(child: _campo('Colonia', _controllers['colonia']!)),
               const SizedBox(width: 12),
               Expanded(child: _campo('C.P.', _controllers['codigoPostal']!, teclado: TextInputType.number)),
             ],
           ),
+          const SizedBox(height: 16),
+          _labelSuperior('Pueblo / Ciudad'),
+          const SizedBox(height: 6),
+          _campo('', _controllers['puebloCiudad']!, hint: 'Pueblo o ciudad'),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(child: _campo('Pueblo/Ciudad', _controllers['puebloCiudad']!)),
-              const SizedBox(width: 12),
-              Expanded(child: _campo('Municipio/Alcaldía', _controllers['municipioAlcaldia']!)),
-              const SizedBox(width: 12),
-              Expanded(child: _campo('Estado', _controllers['estado']!)),
-            ],
-          ),
+          _labelSuperior('Municipio / Alcald\u00eda'),
+          const SizedBox(height: 6),
+          _campo('', _controllers['municipioAlcaldia']!, hint: 'Municipio o alcald\u00eda'),
           const SizedBox(height: 12),
+          _labelSuperior('Estado'),
+          const SizedBox(height: 6),
+          _campo('', _controllers['estado']!, hint: 'Estado'),
+          const SizedBox(height: 16),
           _campo('Referencias (entre calles, sitio notable, etc.)', _controllers['referencias']!, lineas: 2),
           const SizedBox(height: 12),
           Row(
@@ -338,7 +380,7 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
                 child: _campo('Contacto (nombre, cargo, correo-e, etc.)', _controllers['contacto']!),
               ),
               const SizedBox(width: 12),
-              Expanded(child: _campo('Teléfono', _controllers['telefono']!, teclado: TextInputType.phone)),
+              Expanded(child: _campo('Tel\u00e9fono', _controllers['telefono']!, teclado: TextInputType.phone)),
             ],
           ),
         ],
@@ -348,6 +390,15 @@ class _FormularioEvaluacionScreenState extends State<FormularioEvaluacionScreen>
 
   String _fechaStr(DateTime d) =>
       '${d.day.toString().padLeft(2, '0')}/${d.month.toString().padLeft(2, '0')}/${d.year}';
+
+  Widget _labelSuperior(String text) {
+    return Text(
+      text,
+      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
 
   Widget _campo(String label, TextEditingController c, {int lineas = 1, String? hint, TextInputType? teclado}) {
     return TextFormField(

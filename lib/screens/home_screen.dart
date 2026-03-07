@@ -61,8 +61,11 @@ class HomeScreen extends StatelessWidget {
               final nombre = item.nombreInmueble.trim().isNotEmpty
                   ? item.nombreInmueble
                   : 'Sin nombre';
-              final subtitulo = item.calleYNumero.trim().isNotEmpty
-                  ? '${item.calleYNumero}${item.colonia.trim().isNotEmpty ? ", ${item.colonia}" : ""}'
+              final calle = [item.nombreCalle.trim(), item.numeroCalle.trim()]
+                  .where((s) => s.isNotEmpty)
+                  .join(' ');
+              final subtitulo = calle.isNotEmpty
+                  ? (item.colonia.trim().isNotEmpty ? '$calle, ${item.colonia}' : calle)
                   : (item.colonia.trim().isNotEmpty ? item.colonia : '');
               return Card(
                 margin: const EdgeInsets.symmetric(vertical: 4),
