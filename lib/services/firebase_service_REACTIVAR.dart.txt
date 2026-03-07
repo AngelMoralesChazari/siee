@@ -1,0 +1,40 @@
+// Copia este contenido de vuelta a firebase_service.dart cuando descomentes
+// firebase_core y firebase_database en pubspec.yaml y llames a Firebase.initializeApp() en main.dart.
+
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import '../models/formulario_inmueble.dart';
+
+class FirebaseService {
+  static const String _nodoFormularios = 'formularios';
+  final DatabaseReference _ref = FirebaseDatabase.instance.ref();
+
+  Future<String?> guardarFormulario(FormularioInmueble formulario) async {
+    try {
+      final nuevoRef = _ref.child(_nodoFormularios).push();
+      await nuevoRef.set(formulario.toMap());
+      return nuevoRef.key;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Stream<List<FormularioInmueble>> obtenerFormularios() {
+    return _ref.child(_nodoFormularios).onValue.map((event) {
+      final data = event.snapshot.value;
+      if (data == null) return <FormularioInmueble>[];
+      final map = data as Map<dynamic, dynamic>;
+      return map.entries.map((e) {
+        return FormularioInmueble.fromMap(
+          e.key.toString(),
+          Map<dynamic, dynamic>.from(e.value as Map),
+        );
+      }).toList()
+        ..sort((a, b) => b.fechaRegistro.compareTo(a.fechaRegistro));
+    });
+  }
+
+  Future<void> eliminarFormulario(String id) async {
+    await _ref.child(_nodoFormularios).child(id).remove();
+  }
+}
