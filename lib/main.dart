@@ -10,7 +10,7 @@ void main() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
   } catch (_) {
-    // Si falla (ej. emulador sin Google Play), la app igual arranca
+
   }
   runApp(const SieeApp());
 }
